@@ -1,12 +1,14 @@
-from openai import OpenAI
-client = OpenAI(api_key='sk-proj-w22GI6Tu3K1sMrwFzJDFT3BlbkFJ8AuJdj7FfeQrxR30fYRR')
+import openai
 
-completion = client.chat.completions.create(
+
+openai.api_key = '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'
+
+
+respone = openai.chat.completions.create(
   model="gpt-3.5-turbo",
   messages=[
-    {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
     {"role": "user", "content": "Compose a poem that explains the concept of recursion in programming."}
   ]
 )
 
-print(completion.choices[0].message)
+print(respone)
