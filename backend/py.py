@@ -1,5 +1,6 @@
+import os
 from typing import Union
-
+import google.generativeai as genai
 import uvicorn
 from fastapi import FastAPI
 
@@ -26,4 +27,11 @@ async def create_access_token():
 @app.post('ping')
 async def validate_token():
     pass
+
+genai.configure(api_key='AIzaSyAa3_mjYL4FM0wYqEpj8OLVh7vsLdNfslU')
+model = genai.GenerativeModel('gemini-pro')
+
+response = model.generate_content("Write a story about a magic backpack.")
+print(response.text)
+
 
