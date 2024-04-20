@@ -17,7 +17,7 @@ const ChatBot: React.FC = () => {
     setInputText(e.target.value);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
 
     const userMessage: ChatMessage = {
@@ -26,27 +26,47 @@ const ChatBot: React.FC = () => {
       isBotMessage: false,
     };
 
-    const botResponse: ChatMessage = {
-      id: messages.length + 2,
-      text: generateBotResponse(inputText),
-      isBotMessage: true,
-    };
+    setMessages([...messages, userMessage]);
 
-    setMessages([...messages, userMessage, botResponse]);
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/" + encodeURIComponent(inputText),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ inputText }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Ошибка HTTP: " + response.status);
+      }
+
+      const responseData = await response.json();
+      const botResponse: ChatMessage = {
+        id: responseData.id,
+        text: responseData.text,
+        isBotMessage: true,
+      };
+
+      setMessages((prevMessages) => [...prevMessages, botResponse]);
+    } catch (error) {
+      console.error("Ошибка:", error);
+    }
+
     setInputText("");
   };
 
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputKeyDown = async (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // Предотвращаем стандартное действие Enter в поле ввода (новая строка)
-      handleSendMessage(); // Вызываем функцию отправки сообщения
+      e.preventDefault();
+      await handleSendMessage();
     }
   };
-
-  const generateBotResponse = (userMessage: string): string => {
-    return "Привет!";
-  };
-
   return (
     <div className={styles.chatContainer}>
       <div className={styles.chatMessages}>
