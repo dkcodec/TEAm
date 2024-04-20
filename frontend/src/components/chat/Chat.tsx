@@ -38,8 +38,8 @@ const ChatBot: React.FC = () => {
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // Предотвращаем стандартное действие Enter в поле ввода (новая строка)
-      handleSendMessage(); // Вызываем функцию отправки сообщения
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
