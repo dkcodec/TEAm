@@ -26,4 +26,3 @@ async def create_access_token():
 @app.post('ping')
 async def validate_token():
     pass
-
