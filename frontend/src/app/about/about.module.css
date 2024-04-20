@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  gap: 100px;
+}
+
+.textContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.subTitle {
+  color: var(--btn);
+  font-size: 18px;
+}
+
+.title {
+  font-size: 48px;
+}
+
+.boxes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.box {
+  display: flex;
+  width: 110px;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.box h1 {
+  display: flex;
+  color: var(--btn);
+}
+
+.desc {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.imgContainer {
+  flex: 1;
+  position: relative;
+}
+
+.Img {
+  object-fit: contain;
+}
+
+@media (max-width: 830px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .boxes {
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+  }
+}
