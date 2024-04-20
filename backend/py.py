@@ -10,6 +10,7 @@ import google.generativeai as genai
 
 app = FastAPI(title='CityPass ChatBot')
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,6 +20,7 @@ app.add_middleware(
 
 genai.configure(api_key='AIzaSyAa3_mjYL4FM0wYqEpj8OLVh7vsLdNfslU')
 model = genai.GenerativeModel('gemini-pro')
+
 
 def load_image_from_url(image_url: str) -> Image:
     with urllib.request.urlopen(image_url) as response:
@@ -34,9 +36,23 @@ def generate_text(prompt) -> str:
     response = model.generate_content(prompt)
     return response.text
 
+
 @app.options("/")
 async def options_root(request: Request):
     return Response(status_code=200)
+
+
+@app.post('/{responce}')
+def get_responce(responce: str) -> dict:
+    answer = model.generate_content(responce)
+    return JSONResponse(content={
+        'id': 0,
+        'text': answer.text,
+        'isBotMessage': True     
+    })
+
+
+
 
 @app.post('/{response}')
 def get_response(response: str) -> dict:
@@ -46,6 +62,7 @@ def get_response(response: str) -> dict:
         'text': answer,
         'isBotMessage': True     
     })
+
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
@@ -59,6 +76,14 @@ async def create_an_account():
 async def create_access_token():
     pass
 
+
+@app.post('ping')
+async def validate_token():
+    pass
+
+
+
 @app.post('/ping')
 async def validate_token():
     pass
+
