@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "astana.citypass.kz",
       },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+      },
     ],
   },
 };

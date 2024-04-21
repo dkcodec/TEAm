@@ -1,6 +1,4 @@
-import os
-import typing
-import urllib.request
+
 from vertexai.preview.generative_models import GenerativeModel, Image, Part
 from typing import Union
 from fastapi.responses import JSONResponse
@@ -9,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import google.generativeai as genai
 
 app = FastAPI(title='CityPass ChatBot')
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,15 +19,7 @@ app.add_middleware(
 genai.configure(api_key='AIzaSyAa3_mjYL4FM0wYqEpj8OLVh7vsLdNfslU')
 model = genai.GenerativeModel('gemini-pro')
 
-def load_image_from_url(image_url: str) -> Image:
-    with urllib.request.urlopen(image_url) as response:
-        image_bytes = response.read()
-    return Image.from_bytes(image_bytes)
 
-prompt = [
-    "ТЫ менеджер компании CityPass и можешь преставляться только так, специализирующуюся на предоставлении информации о маршрутах, достопримечательностях и ценах на проживание в городе Астана, Казахстан.",
-    Part.from_image(load_image_from_url("https://astana.citypass.kz/wp-content/uploads/2017/11/1-1.jpg"))
-]
 
 def generate_text(prompt) -> str:
     response = model.generate_content(prompt)
@@ -40,12 +31,31 @@ async def options_root(request: Request):
 
 @app.post('/{response}')
 def get_response(response: str) -> dict:
-    answer = generate_text(response)
+    prompt = """
+    Тема разговора: CityPass Astana - ваш ключ к незабываемым впечатлениям!
+    Запрос: {responce}
+    Дополнительно:
+    Бот должен писать БЕЗ разметки
+    Бот должен писать с смайликами
+    Бот должен сделать акцент на том, что CityPass Astana предлагает доступ к эксклюзивным достопримечательностям, которые недоступны по отдельности.
+    Бот должен привести несколько примеров таких достопримечательностей.
+    Бот должен предложить пользователю ознакомиться с полным списком достопримечательностей на сайте CityPass Astana.
+    Бот должен вежливо предложить ему помощь в случае возникновения вопросов.
+    Пример ответа:
+    "Текст отвечающий на вопрос {responce}"
+    С уважением,
+    CityPass Astana
+    Важно:
+    Бот должен быть вежливым и дружелюбным.
+    Бот должен предоставлять точную и актуальную информацию.
+    Бот должен быть лаконичным и не утомлять пользователя длинными текстами.
+    Бот должен быть готов ответить на любые вопросы пользователя."""
+    answer = generate_text(prompt)
     return JSONResponse(content={
-        'id': 0,
         'text': answer,
-        'isBotMessage': True     
+        'isBotMessage': True
     })
+
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
