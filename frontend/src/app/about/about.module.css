@@ -1,4 +1,7 @@
 .container {
+  margin-top: 2%;
+  margin-left: 5%;
+  margin-right: 5%;
   display: flex;
   gap: 100px;
 }
@@ -48,7 +51,8 @@
 }
 
 .Img {
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 50px;
 }
 
 @media (max-width: 830px) {
